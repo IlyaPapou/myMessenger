@@ -1,4 +1,26 @@
 @import 'reset';
 
-body {
+.app-messenger {
+  display: flex;
+  flex-direction: column;
+  .header {
+    background: red;
+    height: 50px;
+  }
+  .main {
+    background: green;
+    display: flex;
+    height: 100%;
+    .sidebar-left {
+      background: black;
+      width: 20%;
+    }
+    .sidebar-right {
+      background: blue;
+      width: 30%;
+    }
+    .content {
+      flex-grow: 1;
+    }
+  }
 }

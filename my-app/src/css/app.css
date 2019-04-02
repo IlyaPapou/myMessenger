@@ -154,13 +154,6 @@ html {
 /* Sections
      ========================================================================== */
 /**
-   * Remove the margin in all browsers.
-   */
-body {
-  margin: 0;
-}
-
-/**
    * Correct the font size and margin on `h1` elements within `section` and
    * `article` contexts in Chrome, Firefox, and Safari.
    */
@@ -467,6 +460,31 @@ template {
    */
 [hidden] {
   display: none;
+}
+
+.app-messenger {
+  display: flex;
+  flex-direction: column;
+}
+.app-messenger .header {
+  background: red;
+  height: 50px;
+}
+.app-messenger .main {
+  background: green;
+  display: flex;
+  height: 100%;
+}
+.app-messenger .main .sidebar-left {
+  background: black;
+  width: 20%;
+}
+.app-messenger .main .sidebar-right {
+  background: blue;
+  width: 30%;
+}
+.app-messenger .main .content {
+  flex-grow: 1;
 }
 
 /*# sourceMappingURL=app.css.map */
