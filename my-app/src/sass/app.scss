@@ -1,23 +1,76 @@
 @import 'reset';
+@import 'https://fonts.googleapis.com/css?family=Roboto+Slab:400,700&subset=cyrillic';
+
+$header-height: 50px;
+$sidebar-left-width: 20%;
+$sidebar-right-width: 30%;
+$border-color: rgba(0, 0, 0, 0.05);
+$primary-color: #e58e26;
+$danger-color: #b71540;
+$body-color: #0c2461;
+
+body {
+  color: $body-color;
+  font-family: 'Roboto Slab', serif;
+}
 
 .app-messenger {
   display: flex;
   flex-direction: column;
   .header {
-    background: red;
-    height: 50px;
+    height: $header-height;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid $border-color;
+    .left {
+      width: $sidebar-left-width;
+      .actions {
+        line-height: $header-height;
+        padding: 0 15px;
+        button {
+        }
+      }
+    }
+    .content {
+      flex-grow: 1;
+      h2 {
+        line-height: $header-height;
+        text-align: center;
+      }
+    }
+    .right {
+      width: $sidebar-right-width;
+      .user-bar {
+        line-height: $header-height;
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 15px;
+        .profile-name {
+          padding-right: 10px;
+        }
+
+        .profile-image {
+          height: $header-height;
+          img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
   }
   .main {
-    background: green;
     display: flex;
     height: 100%;
     .sidebar-left {
-      background: black;
-      width: 20%;
+      width: $sidebar-left-width;
+      border-right: 1px solid $border-color;
     }
     .sidebar-right {
-      background: blue;
-      width: 30%;
+      border-left: 1px solid $border-color;
+      width: $sidebar-right-width;
     }
     .content {
       flex-grow: 1;
