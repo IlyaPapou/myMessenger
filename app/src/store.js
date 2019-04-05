@@ -1,8 +1,8 @@
 import { OrderedMap } from 'immutable';
 
 const users = new OrderedMap({
-  1: { _id: 1, name: 'Ilya', created: new Date() },
-  2: { _id: 2, name: 'Nastya', created: new Date() },
+  '1': { _id: '1', name: 'Ilya', created: new Date() },
+  '2': { _id: '2', name: 'Nastya', created: new Date() },
 });
 
 export default class Store {
@@ -12,10 +12,14 @@ export default class Store {
     this.channels = new OrderedMap();
     this.activeChannelId = null;
     this.user = {
-      _id: 0,
-      user: 'Ilya',
+      _id: '1',
+      name: 'Ilya',
       created: new Date(),
     };
+  }
+
+  getCurrentUser() {
+    return this.user;
   }
 
   setActiveChannel(id) {
@@ -27,11 +31,20 @@ export default class Store {
     const channel = this.activeChannelId
       ? this.channels.get(this.activeChannelId)
       : this.channels.first();
+    console.log('channel', channel);
     return channel;
   }
 
-  addMessage(index, message = {}) {
-    this.messages = this.messages.set(`${index}`, message);
+  addMessage(id, message = {}) {
+    this.messages = this.messages.set(`${id}`, message);
+    const channelId = message.channelId;
+
+    if (channelId) {
+      const channel = this.channels.get(channelId);
+      channel.messages = channel.messages.set(id, true);
+      this.channels = this.channels.set(channelId, channel);
+    }
+
     this.update();
   }
 

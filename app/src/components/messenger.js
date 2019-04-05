@@ -2,13 +2,19 @@ import React, { Component } from 'react';
 import defaultAvatar from '../images/empty-avatar.png';
 import classNames from 'classnames';
 import { OrderedMap } from 'immutable';
+import { ObjectId } from '../helpers/objectid';
 
 export default class Messenger extends Component {
   constructor(props) {
     super(props);
-    this.state = { height: window.innerHeight };
+    this.state = {
+      height: window.innerHeight,
+      newMessage: '',
+    };
     this._onResize = this._onResize.bind(this);
     this.addTestInfo = this.addTestInfo.bind(this);
+    this.handleMessageChange = this.handleMessageChange.bind(this);
+    this.handleSend = this.handleSend.bind(this);
   }
 
   _onResize() {
@@ -24,6 +30,30 @@ export default class Messenger extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this._onResize);
+  }
+
+  handleMessageChange(event) {
+    this.setState({ newMessage: event.target.value });
+  }
+
+  handleSend() {
+    const { store } = this.props;
+    const { newMessage } = this.state;
+    const messageId = new ObjectId().toString();
+    const channelId = store.getActiveChannel()._id;
+    const currentUser = store.getCurrentUser();
+
+    const message = {
+      _id: messageId,
+      channelId,
+      text: newMessage.trim(),
+      author: currentUser.name,
+      avatar: defaultAvatar,
+      me: true,
+    };
+
+    store.addMessage(messageId, message);
+    this.setState({ newMessage: '' });
   }
 
   addTestInfo() {
@@ -73,11 +103,11 @@ export default class Messenger extends Component {
     const { store } = this.props;
     const { height } = this.state;
     const style = { height };
-    const channels = store.getChannels();
     const activeChannel = store.getActiveChannel();
+    const channels = store.getChannels();
     const messagesFromChannel = store.getMessagesFromChannel(activeChannel);
     const membersFromChannel = store.getMembersFromChannel(activeChannel);
-
+    console.log(activeChannel);
     return (
       <div style={style} className="app-messenger">
         <header className="header">
@@ -87,7 +117,7 @@ export default class Messenger extends Component {
             </div>
           </div>
           <div className="content">
-            <h2>Title</h2>
+            <h2>activeChannel.channel</h2>
           </div>
           <div className="right">
             <div className="user-bar">
@@ -110,7 +140,9 @@ export default class Messenger extends Component {
                   <div
                     onClick={index => store.setActiveChannel(channel._id)}
                     key={channel._id}
-                    className="channel"
+                    className={classNames('channel', {
+                      active: activeChannel._id === channel._id,
+                    })}
                   >
                     <div className="channel-image">
                       <img src={channel.image} alt="" />
@@ -150,10 +182,32 @@ export default class Messenger extends Component {
             </div>
             <div className="message-input">
               <div className="text-input">
-                <textarea placeholder="Write your message here!" />
+                <textarea
+                  value={this.state.newMessage}
+                  onChange={this.handleMessageChange}
+                  onKeyUp={event => {
+                    if (
+                      event.key === 'Enter' &&
+                      !event.shiftKey &&
+                      this.state.newMessage.trim() !== ''
+                    ) {
+                      this.handleSend();
+                    }
+                  }}
+                  placeholder="Write your message here!"
+                />
               </div>
               <div className="actions">
-                <button className="send">Send</button>
+                <button
+                  className="send"
+                  onClick={() => {
+                    if (this.state.newMessage.trim() !== '') {
+                      this.handleSend();
+                    }
+                  }}
+                >
+                  Send
+                </button>
               </div>
             </div>
           </section>

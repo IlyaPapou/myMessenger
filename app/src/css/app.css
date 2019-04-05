@@ -467,6 +467,10 @@ body {
   font-size: 16px;
 }
 
+p {
+  word-break: break-all;
+}
+
 .app-messenger {
   display: flex;
   flex-direction: column;
@@ -531,6 +535,7 @@ body {
   width: 25%;
 }
 .main .content {
+  max-width: 60%;
   flex-grow: 1;
   overflow: hidden;
   display: flex;
@@ -576,6 +581,7 @@ body {
   display: flex;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding: 10px 5px;
+  cursor: pointer;
 }
 .channels .channel .channel-image {
   width: 50px;
@@ -591,6 +597,9 @@ body {
 }
 .channels .channel .channel-info p {
   padding-top: 5px;
+}
+.channels .channel.active {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .members {
