@@ -561,46 +561,62 @@ body {
   padding: 0 25px 0 25px;
   cursor: pointer;
 }
+.main .content .message-input .actions .send:hover {
+  transition: 0.09s ease 0.09s;
+  background: #0c2461;
+}
 
-.channel {
+.channels {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: calc(100% - 35px);
+}
+.channels .channel {
   display: flex;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding: 10px 5px;
 }
-.channel .channel-image {
+.channels .channel .channel-image {
   width: 50px;
 }
-.channel .channel-image img {
+.channels .channel .channel-image img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
 }
-.channel .channel-info {
+.channels .channel .channel-info {
   flex-grow: 1;
   padding-left: 10px;
 }
-.channel .channel-info p {
+.channels .channel .channel-info p {
   padding-top: 5px;
 }
 
-.member {
+.members {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: calc(100% - 35px);
+}
+.members .member {
   display: flex;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding: 10px;
 }
-.member .member-image {
+.members .member .member-image {
   width: 30px;
 }
-.member .member-image img {
+.members .member .member-image img {
   width: 30px;
   height: 30px;
   border-radius: 50%;
 }
-.member .member-info {
+.members .member .member-info {
   flex-grow: 1;
   padding-left: 10px;
 }
-.member .member-info p {
+.members .member .member-info p {
   padding-top: 5px;
 }
 
@@ -616,6 +632,9 @@ body {
   flex-direction: row;
   justify-content: flex-start;
   margin: 20px;
+}
+.messages .message .message-user-image {
+  width: 40px;
 }
 .messages .message .message-user-image img {
   width: 40px;
