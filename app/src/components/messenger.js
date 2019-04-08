@@ -37,11 +37,11 @@ export default class Messenger extends Component {
   }
 
   handleSend() {
-    const { store } = this.props;
-    const { newMessage } = this.state;
-    const messageId = new ObjectId().toString();
-    const channelId = store.getActiveChannel()._id;
-    const currentUser = store.getCurrentUser();
+    const { store } = this.props,
+     { newMessage } = this.state,
+     messageId = new ObjectId().toString(),
+     channelId = store.getActiveChannel()._id,
+     currentUser = store.getCurrentUser();
 
     const message = {
       _id: messageId,
@@ -58,16 +58,12 @@ export default class Messenger extends Component {
 
   addTestInfo() {
     const { store } = this.props;
-    let i = 0;
-    let j = 0;
-    let isMe;
+    let i = 0,
+     j = 0,
+     isMe;
 
     for (; i < 100; i++) {
-      isMe = false;
-
-      if (i % 2 === 0) {
-        isMe = true;
-      }
+      isMe = i % 2 === 0;
 
       const newMsg = {
         _id: `${i}`,
@@ -100,14 +96,13 @@ export default class Messenger extends Component {
   }
 
   render() {
-    const { store } = this.props;
-    const { height } = this.state;
-    const style = { height };
-    const activeChannel = store.getActiveChannel();
-    const channels = store.getChannels();
-    const messagesFromChannel = store.getMessagesFromChannel(activeChannel);
-    const membersFromChannel = store.getMembersFromChannel(activeChannel);
-    console.log(activeChannel);
+    const { store } = this.props,{ height } = this.state,
+     style = { height },
+     activeChannel = store.getActiveChannel(),
+     channels = store.getChannels(),
+     messagesFromChannel = store.getMessagesFromChannel(activeChannel),
+     membersFromChannel = store.getMembersFromChannel(activeChannel);
+
     return (
       <div style={style} className="app-messenger">
         <header className="header">

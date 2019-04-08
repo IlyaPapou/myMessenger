@@ -31,7 +31,7 @@ export default class Store {
     const channel = this.activeChannelId
       ? this.channels.get(this.activeChannelId)
       : this.channels.first();
-    console.log('channel', channel);
+
     return channel;
   }
 
