@@ -15,6 +15,7 @@ export default class Messenger extends Component {
     this.addTestInfo = this.addTestInfo.bind(this);
     this.handleMessageChange = this.handleMessageChange.bind(this);
     this.handleSend = this.handleSend.bind(this);
+    this.scrollToTheLastMessage = this.scrollToTheLastMessage.bind(this);
   }
 
   _onResize() {
@@ -28,6 +29,10 @@ export default class Messenger extends Component {
     this.addTestInfo();
   }
 
+  componentDidUpdate() {
+    this.scrollToTheLastMessage();
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this._onResize);
   }
@@ -36,12 +41,18 @@ export default class Messenger extends Component {
     this.setState({ newMessage: event.target.value });
   }
 
+  scrollToTheLastMessage() {
+    if (this.messagesRef) {
+      this.messagesRef.scrollTop = this.messagesRef.scrollHeight;
+    }
+  }
+
   handleSend() {
     const { store } = this.props,
-     { newMessage } = this.state,
-     messageId = new ObjectId().toString(),
-     channelId = store.getActiveChannel()._id,
-     currentUser = store.getCurrentUser();
+      { newMessage } = this.state,
+      messageId = new ObjectId().toString(),
+      channelId = store.getActiveChannel()._id,
+      currentUser = store.getCurrentUser();
 
     const message = {
       _id: messageId,
@@ -59,8 +70,8 @@ export default class Messenger extends Component {
   addTestInfo() {
     const { store } = this.props;
     let i = 0,
-     j = 0,
-     isMe;
+      j = 0,
+      isMe;
 
     for (; i < 100; i++) {
       isMe = i % 2 === 0;
@@ -96,12 +107,13 @@ export default class Messenger extends Component {
   }
 
   render() {
-    const { store } = this.props,{ height } = this.state,
-     style = { height },
-     activeChannel = store.getActiveChannel(),
-     channels = store.getChannels(),
-     messagesFromChannel = store.getMessagesFromChannel(activeChannel),
-     membersFromChannel = store.getMembersFromChannel(activeChannel);
+    const { store } = this.props,
+      { height } = this.state,
+      style = { height },
+      activeChannel = store.getActiveChannel(),
+      channels = store.getChannels(),
+      messagesFromChannel = store.getMessagesFromChannel(activeChannel),
+      membersFromChannel = store.getMembersFromChannel(activeChannel);
 
     return (
       <div style={style} className="app-messenger">
@@ -153,7 +165,7 @@ export default class Messenger extends Component {
           </aside>
 
           <section className="content">
-            <div className="messages">
+            <div ref={ref => (this.messagesRef = ref)} className="messages">
               {messagesFromChannel.map((message, index) => {
                 return (
                   <div
@@ -168,7 +180,7 @@ export default class Messenger extends Component {
                         <h3>{message.me ? 'You say' : message.author}:</h3>
                       </div>
                       <div className="message-text">
-                        <p>{message.text}</p>
+                        <pre>{message.text}</pre>
                       </div>
                     </div>
                   </div>
@@ -184,7 +196,7 @@ export default class Messenger extends Component {
                     if (
                       event.key === 'Enter' &&
                       !event.shiftKey &&
-                      this.state.newMessage.trim() !== ''
+                      this.state.newMessage.trim()
                     ) {
                       this.handleSend();
                     }
@@ -196,7 +208,7 @@ export default class Messenger extends Component {
                 <button
                   className="send"
                   onClick={() => {
-                    if (this.state.newMessage.trim() !== '') {
+                    if (this.state.newMessage.trim()) {
                       this.handleSend();
                     }
                   }}
