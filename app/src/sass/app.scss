@@ -1,5 +1,6 @@
 @import 'reset';
 @import 'https://fonts.googleapis.com/css?family=Roboto+Slab:400,700&subset=cyrillic';
+@import 'icons';
 
 $header-height: 100px;
 $sidebar-left-width: 15%;
@@ -10,6 +11,11 @@ $danger-color: #b71540;
 $body-color: #0c2461;
 $border: 1px solid $border-color;
 $footer-height: 35px;
+$toolbar-input-heigth: 30px;
+
+@function toolbar-pad-top() {
+    @return ($header-height - $toolbar-input-heigth)/2;
+}
 
 body {
     color: $body-color;
@@ -34,10 +40,20 @@ p {
 
     .left {
         width: $sidebar-left-width;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
 
-        .actions {
-            line-height: $header-height;
-            padding: 0 15px;
+        .icons-action {
+            font-size: 25px;
+            cursor: pointer;
+
+            i:hover {
+                transition: 0.09s ease 0.09s;
+                color: $primary-color;
+
+            }
         }
     }
 
@@ -74,6 +90,23 @@ p {
                 }
             }
         }
+    }
+}
+
+.toolbar {
+    height: $header-height;
+    display: flex;
+    flex-direction: row;
+
+    label {
+        line-height: $header-height
+    }
+
+    input {
+        height: $toolbar-input-heigth;
+        line-height: $toolbar-input-heigth;
+        margin-top: toolbar-pad-top();
+        border: 0 none;
     }
 }
 
@@ -122,20 +155,18 @@ p {
                 }
             }
 
-            .actions {
-                .send {
-                    background: $primary-color;
-                    color: #fff;
-                    border: 0 none;
-                    height: 100%;
-                    padding: 0 25px 0 25px;
-                    cursor: pointer;
-                }
+            .send {
+                background: $primary-color;
+                color: #fff;
+                border: 0 none;
+                height: 100%;
+                padding: 0 25px 0 25px;
+                cursor: pointer;
+            }
 
-                .send:hover {
-                    transition: 0.09s ease 0.09s;
-                    background: $body-color;
-                }
+            .send:hover {
+                transition: 0.09s ease 0.09s;
+                background: $body-color;
             }
         }
     }
@@ -241,10 +272,15 @@ p {
             }
 
             .message-text {
-                background: $body-color;
-                color: #fff;
+                white-space: pre;
                 padding: 15px;
+                background: $body-color;
                 border-radius: 15px;
+                color: #fff;
+
+                p {
+                    white-space: pre-wrap;
+                }
             }
         }
 
@@ -253,8 +289,6 @@ p {
 
             .message-body {
                 padding-left: 15px;
-
-                .message-author {}
 
                 .message-text {
                     background: $primary-color;

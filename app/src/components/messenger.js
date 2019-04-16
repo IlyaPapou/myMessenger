@@ -3,15 +3,20 @@ import defaultAvatar from '../images/empty-avatar.png';
 import classNames from 'classnames';
 import { OrderedMap } from 'immutable';
 import { ObjectId } from '../helpers/objectid';
+import SearchUser from './search-user';
 
 export default class Messenger extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       height: window.innerHeight,
       newMessage: '',
+      searchUser: '',
     };
+
     this._onResize = this._onResize.bind(this);
+    this._onCreateChannel = this._onCreateChannel.bind(this);
     this.addTestInfo = this.addTestInfo.bind(this);
     this.handleMessageChange = this.handleMessageChange.bind(this);
     this.handleSend = this.handleSend.bind(this);
@@ -22,6 +27,23 @@ export default class Messenger extends Component {
     this.setState({
       height: window.innerHeight,
     });
+  }
+
+  _onCreateChannel() {
+    const { store } = this.props,
+      channelId = new ObjectId().toString(),
+      channel = {
+        _id: channelId,
+        title: '',
+        lastMessage: '',
+        created: new Date(),
+        members: new OrderedMap({
+          '1': true,
+        }),
+        messages: new OrderedMap(),
+        isNew: true,
+      };
+    store.onCreateNewChannel(channel);
   }
 
   componentDidMount() {
@@ -90,7 +112,8 @@ export default class Messenger extends Component {
       const newChannel = {
         _id: `${j}`,
         image: defaultAvatar,
-        channel: `Channel ${j}`,
+        title: `Channel ${j}`,
+        created: new Date(),
         info: `smth ${j}`,
         members: new OrderedMap({
           '1': true,
@@ -119,12 +142,32 @@ export default class Messenger extends Component {
       <div style={style} className="app-messenger">
         <header className="header">
           <div className="left">
-            <div className="actions">
-              <button>New</button>
+            <div className="icons-action">
+              <i className="icon-cog" />
+            </div>
+            <h3>Messenger</h3>
+            <div onClick={this._onCreateChannel} className="icons-action">
+              <i className="icon-feather" />
             </div>
           </div>
           <div className="content">
-            <h2>activeChannel.channel</h2>
+            {activeChannel &&
+              (activeChannel.isNew ? (
+                <div className="toolbar">
+                  <label>To:</label>
+                  <input
+                    onChange={event => {
+                      const searchUserText = event.target.value;
+                      this.setState({ searchUser: searchUserText });
+                    }}
+                    type="text"
+                    value={this.state.searchUser}
+                  />
+                  <SearchUser />
+                </div>
+              ) : (
+                <h2>{activeChannel.title}</h2>
+              ))}
           </div>
           <div className="right">
             <div className="user-bar">
@@ -155,7 +198,7 @@ export default class Messenger extends Component {
                       <img src={channel.image} alt="" />
                     </div>
                     <div className="channel-info">
-                      <h3>{channel.channel}</h3>
+                      <h3>{channel.title}</h3>
                       <p>{channel.info}</p>
                     </div>
                   </div>
@@ -180,7 +223,7 @@ export default class Messenger extends Component {
                         <h3>{message.me ? 'You say' : message.author}:</h3>
                       </div>
                       <div className="message-text">
-                        <pre>{message.text}</pre>
+                        <p>{message.text}</p>
                       </div>
                     </div>
                   </div>
@@ -228,7 +271,7 @@ export default class Messenger extends Component {
                 return (
                   <div key={member._id} className="member">
                     <div className="member-image">
-                      <img src={defaultAvatar} alt="" />
+                      <img src={member.avatar} alt="" />
                     </div>
                     <div className="member-info">
                       <h3>{member.name}</h3>

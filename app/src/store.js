@@ -1,8 +1,18 @@
 import { OrderedMap } from 'immutable';
 
 const users = new OrderedMap({
-  '1': { _id: '1', name: 'Ilya', created: new Date() },
-  '2': { _id: '2', name: 'Nastya', created: new Date() },
+  '1': {
+    _id: '1',
+    name: 'Ilya',
+    created: new Date(),
+    avatar: 'https://api.adorable.io/avatars/60/fgh@adorable.io.png',
+  },
+  '2': {
+    _id: '2',
+    name: 'Nastya',
+    created: new Date(),
+    avatar: 'https://api.adorable.io/avatars/60/fh@adorable.io.png',
+  },
 });
 
 export default class Store {
@@ -83,7 +93,14 @@ export default class Store {
     this.update();
   }
 
+  onCreateNewChannel(channel = {}) {
+    const channelId = channel._id;
+    this.addChannel(channelId, channel);
+    this.setActiveChannel(channelId);
+  }
+
   getChannels() {
+    this.channels = this.channels.sort((a, b) => b.created - a.created);
     return this.channels.valueSeq();
   }
 
