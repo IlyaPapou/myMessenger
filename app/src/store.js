@@ -28,6 +28,22 @@ export default class Store {
     };
   }
 
+  searchUsers(search = '') {
+    const searchName = search.trim();
+    let searchNameRegex = new RegExp(searchName, 'i');
+    let searchItems = new OrderedMap();
+
+    if (searchName.length) {
+      users.filter(user => {
+        if (user.name.match(searchNameRegex)) {
+          searchItems = searchItems.set(user._id, user);
+        }
+      });
+    }
+
+    return searchItems.valueSeq();
+  }
+
   getCurrentUser() {
     return this.user;
   }

@@ -17,6 +17,10 @@ $toolbar-input-heigth: 30px;
     @return ($header-height - $toolbar-input-heigth)/2;
 }
 
+@function user-list-pad-top() {
+    @return $header-height - $toolbar-input-heigth;
+}
+
 body {
     color: $body-color;
     font-family: 'Roboto Slab', serif;
@@ -99,7 +103,7 @@ p {
     flex-direction: row;
 
     label {
-        line-height: $header-height
+        line-height: $header-height;
     }
 
     input {
@@ -107,6 +111,47 @@ p {
         line-height: $toolbar-input-heigth;
         margin-top: toolbar-pad-top();
         border: 0 none;
+    }
+
+    .search-user {
+        position: absolute;
+        z-index: 1;
+        border-left: $border;
+        border-right: $border;
+        border-bottom: $border;
+        left: $sidebar-left-width;
+        background-color: #fff;
+        top: user-list-pad-top();
+
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            .user {
+                display: flex;
+                flex-direction: row;
+                padding: 10px;
+                cursor: pointer;
+                border-top: $border;
+                min-width: 100%;
+
+                img {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                }
+
+                h3 {
+                    padding-left: 5px;
+                    padding-top: 5px
+                }
+
+                &:hover {
+                    background: rgba(0, 0, 0, 0.03);
+                }
+            }
+        }
     }
 }
 

@@ -163,7 +163,7 @@ export default class Messenger extends Component {
                     type="text"
                     value={this.state.searchUser}
                   />
-                  <SearchUser />
+                  <SearchUser search={this.state.searchUser} store={store} />
                 </div>
               ) : (
                 <h2>{activeChannel.title}</h2>

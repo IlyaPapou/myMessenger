@@ -1,33 +1,21 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 
 export default class SearchUser extends Component {
   render() {
+    const { store, search } = this.props;
+    const users = store.searchUsers(search);
+
     return (
       <div className="search-user">
         <div className="user-list">
-          <div className="user">user</div>
-          <img
-            src="https://api.adorable.io/avatars/60/wat@adorable.io.png"
-            alt=""
-          />
-          <h3>Name</h3>
-        </div>
-        <div className="user-list">
-          <div className="user">user</div>
-          <img
-            src="https://api.adorable.io/avatars/60/wat@adorable.io.png"
-            alt=""
-          />
-          <h3>Name</h3>
-        </div>
-        <div className="user-list">
-          <div className="user">user</div>
-          <img
-            src="https://api.adorable.io/avatars/60/wat@adorable.io.png"
-            alt=""
-          />
-          <h3>Name</h3>
+          {users.map((user, index) => {
+            return (
+              <div key={user._id} className="user">
+                <img src={user.avatar} alt="" />
+                <h3>{user.name}</h3>
+              </div>
+            );
+          })}
         </div>
       </div>
     );
