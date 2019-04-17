@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { OrderedMap } from 'immutable';
 import { ObjectId } from '../helpers/objectid';
 import SearchUser from './search-user';
+import moment from 'moment';
 
 export default class Messenger extends Component {
   constructor(props) {
@@ -37,9 +38,7 @@ export default class Messenger extends Component {
         title: '',
         lastMessage: '',
         created: new Date(),
-        members: new OrderedMap({
-          '1': true,
-        }),
+        members: new OrderedMap(),
         messages: new OrderedMap(),
         isNew: true,
       };
@@ -266,21 +265,23 @@ export default class Messenger extends Component {
             <div className="sidebar-title">
               <h3>Members:</h3>
             </div>
-            <div className="members">
-              {membersFromChannel.map((member, index) => {
-                return (
-                  <div key={member._id} className="member">
-                    <div className="member-image">
-                      <img src={member.avatar} alt="" />
+            {membersFromChannel.length > 0 ? (
+              <div className="members">
+                {membersFromChannel.map((member, index) => {
+                  return (
+                    <div key={member._id} className="member">
+                      <div className="member-image">
+                        <img src={member.avatar} alt="" />
+                      </div>
+                      <div className="member-info">
+                        <h3>{member.name}</h3>
+                        <p>Joined: {moment(member.created).fromNow()}</p>
+                      </div>
                     </div>
-                    <div className="member-info">
-                      <h3>{member.name}</h3>
-                      <p>{JSON.stringify(member.created)}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            ) : null}
           </aside>
         </section>
 

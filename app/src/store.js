@@ -90,18 +90,19 @@ export default class Store {
 
     return messages;
   }
-
+  //TODO: Check everything here
   getMembersFromChannel(activeChannel) {
-    let members = [];
+    let members = new OrderedMap();
 
     if (activeChannel) {
       activeChannel.members.map((value, key) => {
+        console.log(key, value);
         const member = users.get(key);
-        members.push(member);
+        members = members.set(key, member);
       });
     }
 
-    return members;
+    return members.valueSeq();
   }
 
   addChannel(index, channel = {}) {
