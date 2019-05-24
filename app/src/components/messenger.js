@@ -14,6 +14,7 @@ export default class Messenger extends Component {
       height: window.innerHeight,
       newMessage: '',
       searchUser: '',
+      showSearchUser: false,
     };
 
     this._onResize = this._onResize.bind(this);
@@ -35,7 +36,7 @@ export default class Messenger extends Component {
       channelId = new ObjectId().toString(),
       channel = {
         _id: channelId,
-        title: '',
+        title: 'New channel',
         lastMessage: '',
         created: new Date(),
         members: new OrderedMap(),
@@ -157,12 +158,31 @@ export default class Messenger extends Component {
                   <input
                     onChange={event => {
                       const searchUserText = event.target.value;
-                      this.setState({ searchUser: searchUserText });
+                      this.setState({
+                        searchUser: searchUserText,
+                        showSearchUser: true,
+                      });
                     }}
                     type="text"
                     value={this.state.searchUser}
                   />
-                  <SearchUser search={this.state.searchUser} store={store} />
+                  {this.state.showSearchUser ? (
+                    <SearchUser
+                      onSelect={user => {
+                        this.setState(
+                          {
+                            searchUser: '',
+                            showSearchUser: false,
+                          },
+                          () => {
+                            store.addUserToChannel(activeChannel._id, user._id);
+                          },
+                        );
+                      }}
+                      search={this.state.searchUser}
+                      store={store}
+                    />
+                  ) : null}
                 </div>
               ) : (
                 <h2>{activeChannel.title}</h2>
@@ -198,7 +218,7 @@ export default class Messenger extends Component {
                     </div>
                     <div className="channel-info">
                       <h3>{channel.title}</h3>
-                      <p>{channel.info}</p>
+                      <p>{channel.lastMessage}</p>
                     </div>
                   </div>
                 );
@@ -265,20 +285,23 @@ export default class Messenger extends Component {
             <div className="sidebar-title">
               <h3>Members:</h3>
             </div>
-            {membersFromChannel.length > 0 ? (
+            {membersFromChannel.size > 0 ? (
               <div className="members">
                 {membersFromChannel.map((member, index) => {
-                  return (
-                    <div key={member._id} className="member">
-                      <div className="member-image">
-                        <img src={member.avatar} alt="" />
+                  member = membersFromChannel.get(index);
+                  if (member) {
+                    return (
+                      <div key={member._id} className="member">
+                        <div className="member-image">
+                          <img src={member.avatar} alt="" />
+                        </div>
+                        <div className="member-info">
+                          <h3>{member.name}</h3>
+                          <p>Joined: {moment(member.created).fromNow()}</p>
+                        </div>
                       </div>
-                      <div className="member-info">
-                        <h3>{member.name}</h3>
-                        <p>Joined: {moment(member.created).fromNow()}</p>
-                      </div>
-                    </div>
-                  );
+                    );
+                  }
                 })}
               </div>
             ) : null}

@@ -28,6 +28,15 @@ export default class Store {
     };
   }
 
+  addUserToChannel(channelId, userId) {
+    const channel = this.channels.get(channelId);
+    if (channel) {
+      channel.members = channel.members.set(userId, true);
+      this.channels = this.channels.set(channelId, channel);
+      this.update();
+    }
+  }
+
   searchUsers(search = '') {
     const searchName = search.trim();
     let searchNameRegex = new RegExp(searchName, 'i');
@@ -67,6 +76,8 @@ export default class Store {
 
     if (channelId) {
       const channel = this.channels.get(channelId);
+      channel.isNew = false;
+      channel.lastMessage = this.createLastMessage(message.text);
       channel.messages = channel.messages.set(id, true);
       this.channels = this.channels.set(channelId, channel);
     }
@@ -90,15 +101,14 @@ export default class Store {
 
     return messages;
   }
-  //TODO: Check everything here
-  getMembersFromChannel(activeChannel) {
+
+  getMembersFromChannel(channel) {
     let members = new OrderedMap();
 
-    if (activeChannel) {
-      activeChannel.members.map((value, key) => {
-        console.log(key, value);
-        const member = users.get(key);
-        members = members.set(key, member);
+    if (channel) {
+      channel.members.map((value, key) => {
+        const user = users.get(key);
+        members = members.set(key, user);
       });
     }
 
@@ -123,5 +133,10 @@ export default class Store {
 
   update() {
     this.app.forceUpdate();
+  }
+
+  createLastMessage(message) {
+    message = message.substr(0, 15).trim() + '...';
+    return message;
   }
 }
